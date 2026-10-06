@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A social storefront platform where creators launch products, accept payments, and collaborate in rooms."
+    />
+    <title>Coriva | Web design & web development</title>
+    <link rel="icon" type="image/png" href="assets/coriva-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark coriva-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <div>
+            <div class="brand-name">Coriva</div>
+            <div class="brand-tag">Web design & dev</div>
+          </div>
+        </div>
+
+        <nav class="topnav" aria-label="Main navigation">
+          <a href="#feed">Discover</a>
+          <button type="button" id="notificationsButton" class="ghost-btn hidden">Notifications<span id="notificationCount"></span></button>
+        </nav>
+
+        <div class="top-actions">
+          <button class="ghost-btn" id="loginButton">Log in</button>
+          <button class="ghost-btn hidden" id="logoutButton">Log out</button>
+          <button class="ghost-btn hidden" id="accountButton">Account</button>
+          <button class="secondary-btn hidden" id="manageStoresButton">Manage storefronts</button>
+          <button class="secondary-btn hidden" id="managePostsButton">Manage posts</button>
+          <button class="primary-btn" id="newStoreButton">New storefront</button>
+        </div>
+      </header>
+      <div class="cloud-status hidden" id="cloudStatus" role="status" aria-live="polite"></div>
+
+      <main class="layout">
+        <aside class="sidebar left-sidebar">
+          <section class="glass-card profile-panel" aria-labelledby="profileName">
+            <div class="avatar profile-avatar" id="profileAvatar" aria-hidden="true">?</div>
+            <div class="profile-summary">
+              <strong id="profileName">Your profile</strong>
+              <span id="profileHandle">Sign in to set up your creator profile</span>
+              <span class="profile-account-type hidden" id="profileAccountType"></span>
+            </div>
+            <div class="social-links profile-social-links" id="profileSocialLinks" aria-label="Creator social links"></div>
+            <button type="button" class="ghost-btn profile-action" id="profileLoginButton">Sign in</button>
+            <button type="button" class="ghost-btn profile-action hidden" id="profileEditButton">Edit profile</button>
+            <button type="button" class="primary-btn profile-action hidden" id="becomeCreatorButton">Become a creator</button>
+          </section>
+
+          <div class="glass-card storefront-panel" id="storefronts">
+            <div class="panel-header">
+              <div class="panel-title">Your storefronts</div>
+              <button class="tiny-btn" id="newStoreMiniButton">+ New</button>
+            </div>
+
+            <div class="store-list" id="storeList">
+              <div class="empty-state" id="emptyStoreState">
+                No storefronts yet. Create your first web design or development service package.
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card panel mini-panel">
+            <div class="panel-title">Popular services</div>
+            <div class="tag-row">
+              <span>Web Design</span>
+              <span>Web Dev</span>
+              <span>Landing Pages</span>
+              <span>E-commerce</span>
+              <span>Brand Sites</span>
+            </div>
+          </div>
+        </aside>
+
+        <section class="feed-column" id="feed">
+          <div class="composer glass-card">
+            <div class="avatar small" id="composerAvatar">?</div>
+            <button type="button" class="composer-box" id="openPostModalButton">Share a project, offer, or ad...</button>
+            <button type="button" class="primary-btn small-btn" id="createPostButton">Publish</button>
+          </div>
+
+          <div class="story-strip glass-card" role="group" aria-label="Discover feed filter">
+            <button type="button" class="story active" data-feed-filter="all">For you</button>
+            <button type="button" class="story" data-feed-filter="rooms">Rooms</button>
+          </div>
+
+          <form class="discover-search" id="discoverSearchForm" role="search">
+            <label class="visually-hidden" for="discoverSearchInput">Search Discover posts</label>
+            <input id="discoverSearchInput" type="search" placeholder="Search posts, creators, or storefronts" autocomplete="off" />
+            <button type="button" class="clear-search hidden" id="clearDiscoverSearch" aria-label="Clear Discover search">×</button>
+            <span class="visually-hidden" id="discoverSearchStatus" aria-live="polite"></span>
+          </form>
+
+          <div class="post-list" id="discoverFeed" aria-live="polite">
+            <article class="post-card glass-card empty-feed-card" id="feedEmptyState">
+              <div class="empty-post">
+                <h2>Your Discover feed is ready</h2>
+                <p>Share a project, promote an offer, and link it to a storefront so people can shop.</p>
+                <button type="button" class="primary-btn small-btn" id="feedCreatePost">Create a post</button>
+              </div>
+            </article>
+            <section class="glass-card panel rooms-feed-panel hidden" id="projectRoomsPanel" aria-labelledby="projectRoomsTitle">
+              <div class="panel-header rooms-panel-heading">
+                <div>
+                  <div class="panel-title" id="projectRoomsTitle">Chat rooms</div>
+                  <p class="rooms-panel-copy">Join a conversation or create a room around your next project.</p>
+                </div>
+                <button class="primary-btn small-btn" id="newRoomButton">+ Create room</button>
+              </div>
+              <div class="room-list" id="roomList">
+                <div class="empty-room-card">No chat rooms yet. Create one to start a conversation.</div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <main class="room-page hidden" id="roomPage" aria-hidden="true">
+      <header class="storefront-page-nav room-page-nav">
+        <button type="button" class="secondary-btn" id="closeRoomPage">← Back to Rooms</button>
+        <span class="storefront-page-label">Coriva chat room</span>
+        <button type="button" class="primary-btn hidden" id="manageRoomButton" aria-expanded="false">Manage room</button>
+      </header>
+      <div class="room-page-content">
+        <section class="storefront-hero room-hero" id="roomHero">
+          <img class="storefront-banner hidden" id="roomBanner" alt="" />
+          <div class="storefront-hero-shade"></div>
+          <div class="room-hero-copy">
+            <p class="template-eyebrow">Coriva chat room</p>
+            <h1 id="roomPageTitle">Chat room</h1>
+            <p id="roomPageDescription"></p>
+            <span id="roomCreatorName"></span>
+          </div>
+        </section>
+        <section class="room-manager glass-card hidden" id="roomManager">
+          <div class="storefront-editor-heading">
+            <div>
+              <p class="template-eyebrow">Room settings</p>
+              <h2>Customize your room</h2>
+            </div>
+            <div class="room-manager-actions">
+              <button type="button" class="danger-btn" id="deleteRoomButton">Delete room</button>
+              <button type="button" class="primary-btn" id="saveRoomSettings">Save changes</button>
+            </div>
+          </div>
+          <div class="room-customization-grid">
+            <label class="storefront-file-picker">
+              <input id="roomBannerInput" type="file" accept="image/*" />
+              <span class="storefront-file-picker-action"><span class="upload-plus" aria-hidden="true">+</span><span>Add Banner</span></span>
+            </label>
+            <p class="helper-text">Image banner up to 2 MB.</p>
+            <label>
+              <span>Room title</span>
+              <input id="roomTitleInput" type="text" maxlength="70" />
+            </label>
+            <label>
+              <span>Room description</span>
+              <textarea id="roomDescriptionInput" rows="3" maxlength="300"></textarea>
+            </label>
+          </div>
+          <p class="account-status" id="roomStatus" aria-live="polite"></p>
+        </section>
+        <section class="room-chat-panel glass-card">
+          <div class="room-chat-heading">
+            <div>
+              <p class="template-eyebrow">Live conversation</p>
+              <h2>Room chat</h2>
+            </div>
+            <span id="roomMemberHint">Sign in to send messages</span>
+          </div>
+          <div class="store-chat-thread room-chat-thread" id="roomMessageList" role="log" aria-live="polite"></div>
+          <p class="account-status room-message-status" id="roomMessageStatus" aria-live="polite"></p>
+          <div class="room-chat-composer">
+            <div class="room-selected-gif hidden" id="roomSelectedGif">
+              <img id="roomSelectedGifImage" alt="Selected GIF preview" />
+              <span id="roomSelectedGifStatus">GIF ready to send</span>
+              <button type="button" class="room-remove-gif" id="removeRoomGif" aria-label="Remove selected GIF">×</button>
+            </div>
+            <form class="store-chat-form room-chat-form" id="roomMessageForm">
+              <label class="visually-hidden" for="roomMessageInput">Message this room</label>
+              <input id="roomMessageInput" name="message" type="text" maxlength="500" placeholder="Write a message or paste a GIF..." />
+              <button type="submit" class="primary-btn">Send</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div class="modal-overlay hidden" id="createRoomModal" aria-hidden="true">
+      <section class="store-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="createRoomTitle">
+        <button type="button" class="modal-close" id="closeCreateRoom" aria-label="Close room creation">×</button>
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <h2 id="createRoomTitle">Create a chat room</h2>
+        </div>
+        <form class="store-form" id="createRoomForm">
+          <label>
+            <span>Room title</span>
+            <input type="text" name="title" maxlength="70" placeholder="e.g. Portfolio feedback" required />
+          </label>
+          <label>
+            <span>What is this room about?</span>
+            <textarea name="description" rows="3" maxlength="300" placeholder="Set the topic and invite people into the conversation."></textarea>
+          </label>
+          <p class="account-status" id="createRoomStatus" aria-live="polite"></p>
+          <button type="submit" class="primary-btn full-width">Create room</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="deleteRoomConfirmModal" aria-hidden="true">
+      <section class="room-delete-confirm glass-card" role="alertdialog" aria-modal="true" aria-labelledby="deleteRoomConfirmTitle" aria-describedby="deleteRoomConfirmMessage">
+        <h2 id="deleteRoomConfirmTitle">Delete chat room?</h2>
+        <p id="deleteRoomConfirmMessage">Are you sure? All info in this chat will be lost permamently.</p>
+        <p class="account-status" id="deleteRoomStatus" aria-live="polite"></p>
+        <div class="room-delete-confirm-actions">
+          <button type="button" class="secondary-btn" id="cancelDeleteRoom">No</button>
+          <button type="button" class="danger-btn" id="confirmDeleteRoom">Yes</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="firstVisitWelcome" aria-hidden="true">
+      <section class="welcome-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+        <div class="welcome-brand-lockup">
+          <div class="brand-mark coriva-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <span>Coriva</span>
+        </div>
+        <p class="welcome-eyebrow">A community for independent web creators</p>
+        <h1 id="welcomeTitle">Welcome to Coriva</h1>
+        <p class="welcome-copy">What brings you here today?</p>
+        <div class="welcome-choices">
+          <button type="button" class="welcome-choice" data-welcome-type="shopper">
+            <span class="welcome-choice-icon" aria-hidden="true">↗</span>
+            <strong>I'm here to browse</strong>
+            <span>Discover independent studios, services, and ideas.</span>
+          </button>
+          <button type="button" class="welcome-choice creator-choice" data-welcome-type="creator">
+            <span class="welcome-choice-icon" aria-hidden="true">✦</span>
+            <strong>I'm here to create</strong>
+            <span>Build your profile, share work, and open a storefront.</span>
+          </button>
+        </div>
+        <p class="welcome-footnote">Choose your starting point. You can browse either way.</p>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="loginModal" aria-hidden="true">
+      <div class="login-modal glass-card">
+        <button class="modal-close" id="closeLoginModal" aria-label="Close login">×</button>
+
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <h2 id="authTitle">Welcome back</h2>
+        </div>
+
+        <div class="auth-mode-toggle" aria-label="Authentication mode selector">
+          <button type="button" class="mode-tab active" data-auth-mode="signin">Sign in</button>
+          <button type="button" class="mode-tab" data-auth-mode="signup">Create account</button>
+        </div>
+        <p class="account-status error hidden" id="authStatus" role="alert"></p>
+
+        <form id="loginForm" class="login-form auth-panel">
+          <label>
+            <span>Email</span>
+            <input type="email" placeholder="you@example.com" required />
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input type="password" placeholder="••••••••" required />
+          </label>
+
+          <div class="login-options">
+            <label class="remember-row">
+              <input type="checkbox" />
+              <span>Remember me</span>
+            </label>
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="primary-btn full-width">Sign in</button>
+        </form>
+
+        <form id="signupForm" class="signup-form auth-panel hidden">
+          <input id="signupAccountType" type="hidden" name="accountType" value="creator" />
+          <div class="signup-type-picker" role="group" aria-label="Account type">
+            <button type="button" class="signup-type-option active" data-signup-type="creator">Creator</button>
+            <button type="button" class="signup-type-option" data-signup-type="shopper">Shopper</button>
+          </div>
+          <p class="signup-type-description" id="signupTypeDescription">Set up your creator profile and share what you make.</p>
+          <div class="form-grid">
+            <label>
+              <span>Full name (private)</span>
+              <input type="text" name="fullName" placeholder="Jordan Lee" required />
+            </label>
+
+            <label>
+              <span>Username</span>
+              <input type="text" name="username" placeholder="@jordansites" required />
+            </label>
+          </div>
+
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" placeholder="jordan@studio.com" required />
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input id="signupPassword" type="password" name="password" placeholder="Create a password" required />
+          </label>
+
+          <label>
+            <span>Confirm password</span>
+            <input id="signupConfirmPassword" type="password" placeholder="Type it again" aria-describedby="passwordMatchMessage" required />
+            <span class="password-match-message hidden" id="passwordMatchMessage" aria-live="polite"></span>
+          </label>
+
+          <div class="form-grid" id="creatorSignupFields">
+            <label>
+              <span>Role</span>
+              <select name="role">
+                <option>Web designer</option>
+                <option>Web developer</option>
+                <option>Creative studio</option>
+                <option>Freelancer</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Focus</span>
+              <select name="focus">
+                <option>Landing pages</option>
+                <option>E-commerce</option>
+                <option>Brand websites</option>
+                <option>Web apps</option>
+              </select>
+            </label>
+          </div>
+
+          <label id="creatorSpecialtiesField">
+            <span>Specialties</span>
+            <div class="tag-picker">
+              <span>UI Design</span>
+              <span>UX Strategy</span>
+              <span>WordPress</span>
+              <span>React</span>
+              <span>Shopify</span>
+            </div>
+          </label>
+
+          <button type="submit" class="primary-btn full-width">Create account</button>
+        </form>
+
+        <p class="signup-copy" id="authFooterText">
+          Need an account? <a href="#" id="createAccountLink">Create one</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="storeModal" aria-hidden="true">
+      <div class="store-modal glass-card">
+        <button class="modal-close" id="closeStoreModal" aria-label="Close storefront form">×</button>
+
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <h2 id="storeModalTitle">Create storefront</h2>
+        </div>
+
+        <form id="storeForm" class="store-form">
+          <input type="hidden" name="storeId" />
+          <label>
+            <span>Storefront name</span>
+            <input type="text" name="storeName" placeholder="Your storefront name" required maxlength="60" />
+          </label>
+          <button type="submit" class="primary-btn full-width" id="storeSubmitButton">Continue</button>
+        </form>
+      </div>
+    </div>
+
+    <main class="storefront-page hidden" id="storeTemplateModal" aria-hidden="true">
+      <header class="storefront-page-nav">
+        <button type="button" class="secondary-btn" id="closeStoreTemplate">← Back to Coriva</button>
+        <span class="storefront-page-label">Creator storefront</span>
+        <button type="button" class="primary-btn hidden" id="manageStorefrontButton" aria-expanded="false">Manage storefront</button>
+      </header>
+      <div class="storefront-page-content">
+        <section class="storefront-hero" id="storefrontHero">
+          <img class="storefront-banner hidden" id="storefrontBanner" alt="" />
+          <div class="storefront-hero-shade"></div>
+          <div class="storefront-hero-content">
+            <div class="storefront-logo" id="storefrontLogo">C</div>
+            <div>
+              <p class="template-eyebrow">Coriva storefront</p>
+              <h1 id="storeTemplateTitle">New storefront</h1>
+              <button type="button" class="secondary-btn storefront-message-button hidden" id="storefrontMessageButton">Message creator</button>
+              <button type="button" class="primary-btn hidden" id="requestEstimateButton">Request an estimate</button>
+            </div>
+          </div>
+          <div class="storefront-banner-profile">
+            <div class="social-links storefront-banner-socials" id="storefrontSocials" aria-label="Creator social links"></div>
+            <span class="storefront-banner-username" id="storefrontHandle"></span>
+          </div>
+        </section>
+
+        <div class="storefront-workspace">
+          <form id="storeTemplateForm" class="storefront-editor glass-card">
+            <input type="hidden" name="storeId" />
+            <div class="storefront-editor-heading">
+              <div>
+                <p class="template-eyebrow">Make it yours</p>
+                <h2>Set up your storefront</h2>
+              </div>
+              <button type="submit" class="primary-btn" id="publishStoreTemplate">Save storefront</button>
+            </div>
+            <section class="template-section storefront-branding-fields">
+              <h3>Shop branding</h3>
+              <label class="storefront-file-picker">
+                <input id="storeLogoInput" type="file" name="storeLogo" accept="image/*" />
+                <span class="storefront-file-picker-action"><span class="upload-plus" aria-hidden="true">+</span><span>Add Logo</span></span>
+              </label>
+              <label class="storefront-file-picker">
+                <input id="storeBannerInput" type="file" name="storeBanner" accept="image/*" />
+                <span class="storefront-file-picker-action"><span class="upload-plus" aria-hidden="true">+</span><span>Add Banner</span></span>
+              </label>
+              <p class="helper-text">Choose image files up to 2 MB each. Your banner appears across the top of this page.</p>
+            </section>
+            <section class="template-section">
+              <h3>About your studio</h3>
+              <button type="button" class="storefront-bio-action storefront-file-picker-action" id="storefrontBioAction" aria-expanded="false" aria-controls="storefrontBioEditor">
+                <span class="upload-plus" aria-hidden="true">+</span>
+                <span id="storefrontBioActionLabel">Add Bio</span>
+              </button>
+              <div class="storefront-bio-editor hidden" id="storefrontBioEditor">
+                <label>
+                  <span>Bio</span>
+                  <textarea name="storeBio" rows="4" maxlength="600" placeholder="What do you make, who do you help, and what makes your work yours?"></textarea>
+                </label>
+              </div>
+            </section>
+            <section class="template-section">
+              <h3>Show your work</h3>
+              <label class="storefront-file-picker storefront-media-picker">
+                <input id="storeTemplateMedia" type="file" name="storeMedia" accept="image/*,video/mp4,video/webm" multiple />
+                <span class="storefront-file-picker-action"><span class="upload-plus" aria-hidden="true">+</span><span>Post Photo Or Video</span></span>
+              </label>
+              <p class="helper-text">Add up to 6 images or short videos. Each file can be up to 2 MB.</p>
+              <div class="template-media-preview" id="storeTemplateMediaPreview"></div>
+            </section>
+            <section class="template-section invoice-manager-section">
+              <div class="section-heading-row">
+                <div>
+                  <h3>Price Quotes</h3>
+                  <p class="helper-text">Create customer-ready quotes with itemized pricing and download them as PDFs.</p>
+                </div>
+                <button type="button" class="primary-btn" id="createQuoteButton">+ Quote</button>
+              </div>
+              <div class="invoice-list" id="quoteList">
+                <p class="empty-state">No quotes yet.</p>
+              </div>
+            </section>
+            <section class="template-section invoice-manager-section">
+              <div class="section-heading-row">
+                <div>
+                  <h3>Invoices</h3>
+                  <p class="helper-text">Create itemized invoices and give customers a payment link or scannable QR code.</p>
+                </div>
+                <button type="button" class="primary-btn" id="createInvoiceButton">+ Invoice</button>
+              </div>
+              <div class="invoice-list" id="invoiceList">
+                <p class="empty-state">No invoices yet.</p>
+              </div>
+            </section>
+            <section class="template-section">
+              <h3>Connect</h3>
+              <div class="social-link-fields" id="storeTemplateSocialLinks"></div>
+              <button type="button" class="secondary-btn add-social-link-btn" id="addStoreSocialLink">+ Profile URL</button>
+            </section>
+            <p class="account-status" id="storeTemplateStatus" aria-live="polite"></p>
+          </form>
+          <section class="storefront-posts-section">
+            <section class="storefront-about glass-card">
+              <p class="template-eyebrow">A little about</p>
+              <h2>About the studio</h2>
+              <p id="storefrontBio"></p>
+            </section>
+            <div class="storefront-posts-heading">
+              <div>
+                <p class="template-eyebrow">The portfolio</p>
+                <h2>Work and posts</h2>
+              </div>
+              <button type="button" class="primary-btn hidden" id="storefrontCreatePost">Create a post</button>
+            </div>
+            <div class="storefront-posts-grid" id="storefrontPosts"></div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <div class="modal-overlay hidden" id="quoteModal" aria-hidden="true">
+      <section class="invoice-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="quoteModalTitle">
+        <button class="modal-close" id="closeQuoteModal" aria-label="Close quote editor">×</button>
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <div>
+            <h2 id="quoteModalTitle">Create price quote</h2>
+            <p class="helper-text">Give customers a clear estimate before they commit.</p>
+          </div>
+        </div>
+        <form id="quoteForm" class="store-form invoice-form">
+          <input type="hidden" name="quoteId" />
+          <div class="form-grid">
+            <label><span>Customer name</span><input name="customerName" maxlength="120" required placeholder="Customer name" /></label>
+            <label><span>Customer email</span><input name="customerEmail" type="email" maxlength="160" placeholder="customer@example.com" /></label>
+          </div>
+          <div class="form-grid">
+            <label><span>Quote number</span><input name="quoteNumber" maxlength="40" required /></label>
+            <label><span>Valid until</span><input name="validUntil" type="date" /></label>
+          </div>
+          <label><span>Notes / terms</span><textarea name="notes" rows="2" maxlength="500" placeholder="Quote is valid for 30 days..."></textarea></label>
+          <div class="invoice-items-editor">
+            <div class="section-heading-row"><h3>Quoted items</h3><button type="button" class="secondary-btn" id="addQuoteItem">+ Add item</button></div>
+            <div id="quoteItems"></div>
+          </div>
+          <div class="form-grid">
+            <label><span>Tax (%)</span><input name="taxRate" type="number" min="0" max="100" step="0.01" value="0" /></label>
+            <div class="currency-picker">
+              <label><span>Find a currency</span><input type="search" name="currencySearch" placeholder="Search name, code, or country" autocomplete="off" /></label>
+              <label><span>Seller currency</span><select name="currency" required><option value="USD">USD — US Dollar</option></select></label>
+              <small class="currency-search-status" aria-live="polite"></small>
+              <label><span>Customer currency</span><select name="consumerCurrency" required><option value="USD">USD — US Dollar</option></select></label>
+              <p class="helper-text">Enter item prices and workflow fees in seller currency. You can switch between your country’s currencies; review entered prices when switching. Customer totals convert automatically.</p>
+              <p class="exchange-status helper-text" aria-live="polite"></p>
+              <button type="button" class="secondary-btn refresh-exchange">Refresh exchange rate</button>
+              <small><a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">Rates By Exchange Rate API</a> · Updated daily. Payment providers may use different rates or fees.</small>
+            </div>
+          </div>
+          <div class="workflow-pricing-editor">
+            <div class="section-heading-row"><div><h3>Workflow pricing</h3><p class="helper-text">Add labor or project pricing separately from your itemized charges.</p></div></div>
+            <div class="form-grid">
+              <label><span>Pricing type</span><select name="workflowPricingType"><option value="none">None</option><option value="hourly">Hourly rate</option><option value="flat">Flat fee</option></select></label>
+              <label class="workflow-hourly-field"><span>Hourly rate</span><input name="workflowHourlyRate" type="number" min="0" step="any" value="0" /></label>
+              <label class="workflow-hourly-field"><span>Hours worked</span><input name="workflowHours" type="number" min="0" step="0.01" value="0" /></label>
+              <label class="workflow-flat-field hidden"><span>Flat fee</span><input name="workflowFlatFee" type="number" min="0" step="any" value="0" /></label>
+            </div>
+            <label><span>Workflow description</span><input name="workflowDescription" maxlength="180" placeholder="e.g. Design, development, consulting, installation" /></label>
+            <div class="workflow-pricing-preview"><span>Workflow charge</span><strong class="workflow-preview-amount">$0.00</strong></div>
+          </div>
+          <div class="invoice-total-preview" aria-live="polite">
+            <div><span>Estimated subtotal</span><strong id="quotePreviewSubtotal">$0.00</strong></div>
+            <div><span>Estimated tax</span><strong id="quotePreviewTax">$0.00</strong></div>
+            <div class="invoice-total-preview-grand"><span>Estimated total</span><strong id="quotePreviewTotal">$0.00</strong></div>
+            <div><span>Customer subtotal</span><strong class="consumer-subtotal">—</strong></div>
+            <div><span>Customer tax</span><strong class="consumer-tax">—</strong></div>
+            <div class="invoice-total-preview-grand"><span>Customer total</span><strong class="consumer-total">—</strong></div>
+          </div>
+          <p class="account-status" id="quoteStatus" aria-live="polite"></p>
+          <div class="invoice-form-actions">
+            <button type="button" class="secondary-btn" id="cancelQuote">Cancel</button>
+            <button type="submit" class="primary-btn">Save &amp; download PDF</button>
+            <button type="button" class="secondary-btn share-job-document hidden" disabled>Share with customer</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="invoiceModal" aria-hidden="true">
+      <section class="invoice-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="invoiceModalTitle">
+        <button class="modal-close" id="closeInvoiceModal" aria-label="Close invoice editor">×</button>
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <div>
+            <h2 id="invoiceModalTitle">Create invoice</h2>
+            <p class="helper-text">Build a customer-ready invoice without leaving your storefront.</p>
+          </div>
+        </div>
+        <form id="invoiceForm" class="store-form invoice-form">
+          <input type="hidden" name="invoiceId" />
+          <div class="form-grid">
+            <label><span>Customer name</span><input name="customerName" maxlength="120" required placeholder="Customer name" /></label>
+            <label><span>Customer email</span><input name="customerEmail" type="email" maxlength="160" placeholder="customer@example.com" /></label>
+          </div>
+          <div class="form-grid">
+            <label><span>Invoice number</span><input name="invoiceNumber" maxlength="40" required /></label>
+            <label><span>Due date</span><input name="dueDate" type="date" /></label>
+          </div>
+          <label><span>Notes</span><textarea name="notes" rows="2" maxlength="500" placeholder="Thank you for your business..."></textarea></label>
+          <div class="invoice-items-editor">
+            <div class="section-heading-row"><h3>Items</h3><button type="button" class="secondary-btn" id="addInvoiceItem">+ Add item</button></div>
+            <div id="invoiceItems"></div>
+          </div>
+          <div class="form-grid">
+            <label><span>Tax (%)</span><input name="taxRate" type="number" min="0" max="100" step="0.01" value="0" /></label>
+            <div class="currency-picker">
+              <label><span>Find a currency</span><input type="search" name="currencySearch" placeholder="Search name, code, or country" autocomplete="off" /></label>
+              <label><span>Seller currency</span><select name="currency" required><option value="USD">USD — US Dollar</option></select></label>
+              <small class="currency-search-status" aria-live="polite"></small>
+              <label><span>Customer currency</span><select name="consumerCurrency" required><option value="USD">USD — US Dollar</option></select></label>
+              <p class="helper-text">Enter item prices and workflow fees in seller currency. You can switch between your country’s currencies; review entered prices when switching. Customer totals convert automatically.</p>
+              <p class="exchange-status helper-text" aria-live="polite"></p>
+              <button type="button" class="secondary-btn refresh-exchange">Refresh exchange rate</button>
+              <small><a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">Rates By Exchange Rate API</a> · Updated daily. Payment providers may use different rates or fees.</small>
+            </div>
+          </div>
+          <div class="workflow-pricing-editor">
+            <div class="section-heading-row"><div><h3>Workflow pricing</h3><p class="helper-text">Add labor or project pricing separately from your itemized charges.</p></div></div>
+            <div class="form-grid">
+              <label><span>Pricing type</span><select name="workflowPricingType"><option value="none">None</option><option value="hourly">Hourly rate</option><option value="flat">Flat fee</option></select></label>
+              <label class="workflow-hourly-field"><span>Hourly rate</span><input name="workflowHourlyRate" type="number" min="0" step="any" value="0" /></label>
+              <label class="workflow-hourly-field"><span>Hours worked</span><input name="workflowHours" type="number" min="0" step="0.01" value="0" /></label>
+              <label class="workflow-flat-field hidden"><span>Flat fee</span><input name="workflowFlatFee" type="number" min="0" step="any" value="0" /></label>
+            </div>
+            <label><span>Workflow description</span><input name="workflowDescription" maxlength="180" placeholder="e.g. Design, development, consulting, installation" /></label>
+            <div class="workflow-pricing-preview"><span>Workflow charge</span><strong class="workflow-preview-amount">$0.00</strong></div>
+          </div>
+          <div class="invoice-total-preview" aria-live="polite">
+            <div><span>Subtotal</span><strong id="invoicePreviewSubtotal">$0.00</strong></div>
+            <div><span>Tax</span><strong id="invoicePreviewTax">$0.00</strong></div>
+            <div class="invoice-total-preview-grand"><span>Total to bill</span><strong id="invoicePreviewTotal">$0.00</strong></div>
+            <div><span>Customer subtotal</span><strong class="consumer-subtotal">—</strong></div>
+            <div><span>Customer tax</span><strong class="consumer-tax">—</strong></div>
+            <div class="invoice-total-preview-grand"><span>Customer total</span><strong class="consumer-total">—</strong></div>
+          </div>
+          <div class="payment-methods-editor">
+            <div class="section-heading-row">
+              <div><h3>Payment methods</h3><p class="helper-text">Add any payment app or checkout link. Each one gets a QR code on the PDF.</p></div>
+              <button type="button" class="secondary-btn" id="addPaymentMethod">+ Payment app</button>
+            </div>
+            <div id="paymentMethods"></div>
+          </div>
+          <p class="account-status" id="invoiceStatus" aria-live="polite"></p>
+          <div class="invoice-form-actions">
+            <button type="button" class="secondary-btn" id="cancelInvoice">Cancel</button>
+            <button type="submit" class="primary-btn">Save &amp; download PDF</button>
+            <button type="button" class="secondary-btn share-job-document hidden" disabled>Share with customer</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+
+
+    <div class="modal-overlay hidden" id="storeDetailModal" aria-hidden="true">
+      <section class="detail-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="storeDetailTitle">
+        <button class="modal-close" id="closeStoreDetail" aria-label="Close storefront details">×</button>
+        <div id="storeDetailContent"></div>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="storeChatModal" aria-hidden="true">
+      <section class="store-chat-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="storeChatTitle">
+        <button class="modal-close" id="closeStoreChat" aria-label="Close storefront chat">×</button>
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <div>
+            <h2 id="storeChatTitle">Chat with creator</h2>
+            <p class="chat-store-context" id="chatStoreContext"></p>
+          </div>
+        </div>
+        <div class="store-chat-thread" id="storeChatThread" role="log" aria-live="polite"></div>
+        <form id="storeChatForm" class="store-chat-form">
+          <label class="visually-hidden" for="storeChatMessage">Your message</label>
+          <input id="storeChatMessage" name="message" type="text" maxlength="500" placeholder="Write a message..." required />
+          <button type="submit" class="primary-btn">Send</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="createPostModal" aria-hidden="true">
+      <section class="post-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="createPostTitle">
+        <button class="modal-close" id="closePostModal" aria-label="Close post composer">×</button>
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <h2 id="createPostTitle">Create a Discover post</h2>
+        </div>
+        <form id="postForm" class="store-form">
+          <label>
+            <span>Post type</span>
+            <select name="postType">
+              <option value="post">Creator post</option>
+              <option value="ad">Sponsored ad</option>
+            </select>
+          </label>
+          <label>
+            <span>Caption</span>
+            <textarea name="caption" rows="3" maxlength="300" placeholder="Show the work, explain the offer, or tell the story..." required></textarea>
+          </label>
+          <label>
+            <span>Photo or video</span>
+            <input type="file" name="media" accept="image/*,video/mp4,video/webm" required />
+          </label>
+          <p class="helper-text">Use an image or a short MP4/WebM clip up to 2 MB in this browser prototype.</p>
+          <label>
+            <span>Link to a storefront</span>
+            <select name="storeId" id="postStorefrontSelect">
+              <option value="">No storefront selected</option>
+            </select>
+          </label>
+          <p class="helper-text" id="postStoreHint">Link a storefront to give viewers a direct shopping button.</p>
+          <p class="account-status" id="postUploadStatus" aria-live="polite"></p>
+          <button type="submit" class="primary-btn full-width">Publish to Discover</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="managePostsModal" aria-hidden="true">
+      <section class="manage-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="managePostsTitle">
+        <button class="modal-close" id="closeManagePosts" aria-label="Close post manager">×</button>
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <h2 id="managePostsTitle">Manage posts</h2>
+        </div>
+        <div class="managed-post-list" id="managedPostList"></div>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="manageStoresModal" aria-hidden="true">
+      <section class="manage-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="manageStoresTitle">
+        <button class="modal-close" id="closeManageStores" aria-label="Close storefront manager">×</button>
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <h2 id="manageStoresTitle">Manage storefronts</h2>
+        </div>
+        <div class="managed-store-list" id="managedStoreList"></div>
+      </section>
+    </div>
+
+    <div class="modal-overlay hidden" id="accountModal" aria-hidden="true">
+      <section class="account-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+        <button class="modal-close" id="closeAccount" aria-label="Close account settings">×</button>
+        <div class="modal-header">
+          <div class="brand-mark coriva-brand small-brand"><img src="assets/coriva-logo.png" alt="Coriva" width="48" height="48" /></div>
+          <h2 id="accountTitle">Account settings</h2>
+        </div>
+        <form id="accountForm" class="store-form account-form">
+          <div class="form-grid">
+            <label><span>Country or territory</span><select name="country" autocomplete="country-name">
+                <option value="">Select your country</option>
+                <option value="AFGHANISTAN">Afghanistan</option>
+                <option value="ÅLAND ISLANDS">Åland Islands</option>
+                <option value="ALBANIA">Albania</option>
+                <option value="ALGERIA">Algeria</option>
+                <option value="AMERICAN SAMOA">American Samoa</option>
+                <option value="ANDORRA">Andorra</option>
+                <option value="ANGOLA">Angola</option>
+                <option value="ANGUILLA">Anguilla</option>
+                <option value="ANTARCTICA">Antarctica</option>
+                <option value="ANTIGUA AND BARBUDA">Antigua And Barbuda</option>
+                <option value="ARGENTINA">Argentina</option>
+                <option value="ARMENIA">Armenia</option>
+                <option value="ARUBA">Aruba</option>
+                <option value="AUSTRALIA">Australia</option>
+                <option value="AUSTRIA">Austria</option>
+                <option value="AZERBAIJAN">Azerbaijan</option>
+                <option value="BAHAMAS (THE)">Bahamas</option>
+                <option value="BAHRAIN">Bahrain</option>
+                <option value="BANGLADESH">Bangladesh</option>
+                <option value="BARBADOS">Barbados</option>
+                <option value="BELARUS">Belarus</option>
+                <option value="BELGIUM">Belgium</option>
+                <option value="BELIZE">Belize</option>
+                <option value="BENIN">Benin</option>
+                <option value="BERMUDA">Bermuda</option>
+                <option value="BHUTAN">Bhutan</option>
+                <option value="BOLIVIA (PLURINATIONAL STATE OF)">Bolivia (Plurinational State Of)</option>
+                <option value="BONAIRE, SINT EUSTATIUS AND SABA">Bonaire, Sint Eustatius And Saba</option>
+                <option value="BOSNIA AND HERZEGOVINA">Bosnia And Herzegovina</option>
+                <option value="BOTSWANA">Botswana</option>
+                <option value="BOUVET ISLAND">Bouvet Island</option>
+                <option value="BRAZIL">Brazil</option>
+                <option value="BRITISH INDIAN OCEAN TERRITORY (THE)">British Indian Ocean Territory</option>
+                <option value="BRUNEI DARUSSALAM">Brunei Darussalam</option>
+                <option value="BULGARIA">Bulgaria</option>
+                <option value="BURKINA FASO">Burkina Faso</option>
+                <option value="BURUNDI">Burundi</option>
+                <option value="CABO VERDE">Cabo Verde</option>
+                <option value="CAMBODIA">Cambodia</option>
+                <option value="CAMEROON">Cameroon</option>
+                <option value="CANADA">Canada</option>
+                <option value="CAYMAN ISLANDS (THE)">Cayman Islands</option>
+                <option value="CENTRAL AFRICAN REPUBLIC (THE)">Central African Republic</option>
+                <option value="CHAD">Chad</option>
+                <option value="CHILE">Chile</option>
+                <option value="CHINA">China</option>
+                <option value="CHRISTMAS ISLAND">Christmas Island</option>
+                <option value="COCOS (KEELING) ISLANDS (THE)">Cocos (Keeling) Islands</option>
+                <option value="COLOMBIA">Colombia</option>
+                <option value="COMOROS (THE)">Comoros</option>
+                <option value="CONGO (THE)">Congo</option>
+                <option value="CONGO (THE DEMOCRATIC REPUBLIC OF THE)">Congo (The Democratic Republic Of The)</option>
+                <option value="COOK ISLANDS (THE)">Cook Islands</option>
+                <option value="COSTA RICA">Costa Rica</option>
+                <option value="CÔTE D&#x27;IVOIRE">Côte D&#x27;Ivoire</option>
+                <option value="CROATIA">Croatia</option>
+                <option value="CUBA">Cuba</option>
+                <option value="CURAÇAO">Curaçao</option>
+                <option value="CYPRUS">Cyprus</option>
+                <option value="CZECHIA">Czechia</option>
+                <option value="DENMARK">Denmark</option>
+                <option value="DJIBOUTI">Djibouti</option>
+                <option value="DOMINICA">Dominica</option>
+                <option value="DOMINICAN REPUBLIC (THE)">Dominican Republic</option>
+                <option value="ECUADOR">Ecuador</option>
+                <option value="EGYPT">Egypt</option>
+                <option value="EL SALVADOR">El Salvador</option>
+                <option value="EQUATORIAL GUINEA">Equatorial Guinea</option>
+                <option value="ERITREA">Eritrea</option>
+                <option value="ESTONIA">Estonia</option>
+                <option value="ESWATINI">Eswatini</option>
+                <option value="ETHIOPIA">Ethiopia</option>
+                <option value="FALKLAND ISLANDS (THE) [MALVINAS]">Falkland Islands [Malvinas]</option>
+                <option value="FAROE ISLANDS (THE)">Faroe Islands</option>
+                <option value="FIJI">Fiji</option>
+                <option value="FINLAND">Finland</option>
+                <option value="FRANCE">France</option>
+                <option value="FRENCH GUIANA">French Guiana</option>
+                <option value="FRENCH POLYNESIA">French Polynesia</option>
+                <option value="FRENCH SOUTHERN TERRITORIES (THE)">French Southern Territories</option>
+                <option value="GABON">Gabon</option>
+                <option value="GAMBIA (THE)">Gambia</option>
+                <option value="GEORGIA">Georgia</option>
+                <option value="GERMANY">Germany</option>
+                <option value="GHANA">Ghana</option>
+                <option value="GIBRALTAR">Gibraltar</option>
+                <option value="GREECE">Greece</option>
+                <option value="GREENLAND">Greenland</option>
+                <option value="GRENADA">Grenada</option>
+                <option value="GUADELOUPE">Guadeloupe</option>
+                <option value="GUAM">Guam</option>
+                <option value="GUATEMALA">Guatemala</option>
+                <option value="GUERNSEY">Guernsey</option>
+                <option value="GUINEA">Guinea</option>
+                <option value="GUINEA-BISSAU">Guinea-Bissau</option>
+                <option value="GUYANA">Guyana</option>
+                <option value="HAITI">Haiti</option>
+                <option value="HEARD ISLAND AND McDONALD ISLANDS">Heard Island And Mcdonald Islands</option>
+                <option value="HOLY SEE (THE)">Holy See</option>
+                <option value="HONDURAS">Honduras</option>
+                <option value="HONG KONG">Hong Kong</option>
+                <option value="HUNGARY">Hungary</option>
+                <option value="ICELAND">Iceland</option>
+                <option value="INDIA">India</option>
+                <option value="INDONESIA">Indonesia</option>
+                <option value="IRAN (ISLAMIC REPUBLIC OF)">Iran (Islamic Republic Of)</option>
+                <option value="IRAQ">Iraq</option>
+                <option value="IRELAND">Ireland</option>
+                <option value="ISLE OF MAN">Isle Of Man</option>
+                <option value="ISRAEL">Israel</option>
+                <option value="ITALY">Italy</option>
+                <option value="JAMAICA">Jamaica</option>
+                <option value="JAPAN">Japan</option>
+                <option value="JERSEY">Jersey</option>
+                <option value="JORDAN">Jordan</option>
+                <option value="KAZAKHSTAN">Kazakhstan</option>
+                <option value="KENYA">Kenya</option>
+                <option value="KIRIBATI">Kiribati</option>
+                <option value="KUWAIT">Kuwait</option>
+                <option value="KYRGYZSTAN">Kyrgyzstan</option>
+                <option value="LAO PEOPLE’S DEMOCRATIC REPUBLIC (THE)">Lao People’S Democratic Republic</option>
+                <option value="LATVIA">Latvia</option>
+                <option value="LEBANON">Lebanon</option>
+                <option value="LESOTHO">Lesotho</option>
+                <option value="LIBERIA">Liberia</option>
+                <option value="LIBYA">Libya</option>
+                <option value="LIECHTENSTEIN">Liechtenstein</option>
+                <option value="LITHUANIA">Lithuania</option>
+                <option value="LUXEMBOURG">Luxembourg</option>
+                <option value="MACAO">Macao</option>
+                <option value="MADAGASCAR">Madagascar</option>
+                <option value="MALAWI">Malawi</option>
+                <option value="MALAYSIA">Malaysia</option>
+                <option value="MALDIVES">Maldives</option>
+                <option value="MALI">Mali</option>
+                <option value="MALTA">Malta</option>
+                <option value="MARSHALL ISLANDS (THE)">Marshall Islands</option>
+                <option value="MARTINIQUE">Martinique</option>
+                <option value="MAURITANIA">Mauritania</option>
+                <option value="MAURITIUS">Mauritius</option>
+                <option value="MAYOTTE">Mayotte</option>
+                <option value="MEXICO">Mexico</option>
+                <option value="MICRONESIA (FEDERATED STATES OF)">Micronesia (Federated States Of)</option>
+                <option value="MOLDOVA (THE REPUBLIC OF)">Moldova (The Republic Of)</option>
+                <option value="MONACO">Monaco</option>
+                <option value="MONGOLIA">Mongolia</option>
+                <option value="MONTENEGRO">Montenegro</option>
+                <option value="MONTSERRAT">Montserrat</option>
+                <option value="MOROCCO">Morocco</option>
+                <option value="MOZAMBIQUE">Mozambique</option>
+                <option value="MYANMAR">Myanmar</option>
+                <option value="NAMIBIA">Namibia</option>
+                <option value="NAURU">Nauru</option>
+                <option value="NEPAL">Nepal</option>
+                <option value="NETHERLANDS (THE)">Netherlands</option>
+                <option value="NEW CALEDONIA">New Caledonia</option>
+                <option value="NEW ZEALAND">New Zealand</option>
+                <option value="NICARAGUA">Nicaragua</option>
+                <option value="NIGER (THE)">Niger</option>
+                <option value="NIGERIA">Nigeria</option>
+                <option value="NIUE">Niue</option>
+                <option value="NORFOLK ISLAND">Norfolk Island</option>
+                <option value="KOREA (THE DEMOCRATIC PEOPLE’S REPUBLIC OF)">North Korea</option>
+                <option value="NORTH MACEDONIA">North Macedonia</option>
+                <option value="NORTHERN MARIANA ISLANDS (THE)">Northern Mariana Islands</option>
+                <option value="NORWAY">Norway</option>
+                <option value="OMAN">Oman</option>
+                <option value="PAKISTAN">Pakistan</option>
+                <option value="PALAU">Palau</option>
+                <option value="PALESTINE, STATE OF">Palestine, State Of</option>
+                <option value="PANAMA">Panama</option>
+                <option value="PAPUA NEW GUINEA">Papua New Guinea</option>
+                <option value="PARAGUAY">Paraguay</option>
+                <option value="PERU">Peru</option>
+                <option value="PHILIPPINES (THE)">Philippines</option>
+                <option value="PITCAIRN">Pitcairn</option>
+                <option value="POLAND">Poland</option>
+                <option value="PORTUGAL">Portugal</option>
+                <option value="PUERTO RICO">Puerto Rico</option>
+                <option value="QATAR">Qatar</option>
+                <option value="RÉUNION">Réunion</option>
+                <option value="ROMANIA">Romania</option>
+                <option value="RUSSIAN FEDERATION (THE)">Russian Federation</option>
+                <option value="RWANDA">Rwanda</option>
+                <option value="SAINT BARTHÉLEMY">Saint Barthélemy</option>
+                <option value="SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA">Saint Helena, Ascension And Tristan Da Cunha</option>
+                <option value="SAINT KITTS AND NEVIS">Saint Kitts And Nevis</option>
+                <option value="SAINT LUCIA">Saint Lucia</option>
+                <option value="SAINT MARTIN (FRENCH PART)">Saint Martin (French Part)</option>
+                <option value="SAINT PIERRE AND MIQUELON">Saint Pierre And Miquelon</option>
+                <option value="SAINT VINCENT AND THE GRENADINES">Saint Vincent And The Grenadines</option>
+                <option value="SAMOA">Samoa</option>
+                <option value="SAN MARINO">San Marino</option>
+                <option value="SAO TOME AND PRINCIPE">Sao Tome And Principe</option>
+                <option value="SAUDI ARABIA">Saudi Arabia</option>
+                <option value="SENEGAL">Senegal</option>
+                <option value="SERBIA">Serbia</option>
+                <option value="SEYCHELLES">Seychelles</option>
+                <option value="SIERRA LEONE">Sierra Leone</option>
+                <option value="SINGAPORE">Singapore</option>
+                <option value="SINT MAARTEN (DUTCH PART)">Sint Maarten (Dutch Part)</option>
+                <option value="SLOVAKIA">Slovakia</option>
+                <option value="SLOVENIA">Slovenia</option>
+                <option value="SOLOMON ISLANDS">Solomon Islands</option>
+                <option value="SOMALIA">Somalia</option>
+                <option value="SOUTH AFRICA">South Africa</option>
+                <option value="SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS">South Georgia And The South Sandwich Islands</option>
+                <option value="KOREA (THE REPUBLIC OF)">South Korea</option>
+                <option value="SOUTH SUDAN">South Sudan</option>
+                <option value="SPAIN">Spain</option>
+                <option value="SRI LANKA">Sri Lanka</option>
+                <option value="SUDAN (THE)">Sudan</option>
+                <option value="SURINAME">Suriname</option>
+                <option value="SVALBARD AND JAN MAYEN">Svalbard And Jan Mayen</option>
+                <option value="SWEDEN">Sweden</option>
+                <option value="SWITZERLAND">Switzerland</option>
+                <option value="SYRIAN ARAB REPUBLIC">Syrian Arab Republic</option>
+                <option value="TAIWAN (PROVINCE OF CHINA)">Taiwan (Province Of China)</option>
+                <option value="TAJIKISTAN">Tajikistan</option>
+                <option value="TANZANIA, UNITED REPUBLIC OF">Tanzania, United Republic Of</option>
+                <option value="THAILAND">Thailand</option>
+                <option value="TIMOR-LESTE">Timor-Leste</option>
+                <option value="TOGO">Togo</option>
+                <option value="TOKELAU">Tokelau</option>
+                <option value="TONGA">Tonga</option>
+                <option value="TRINIDAD AND TOBAGO">Trinidad And Tobago</option>
+                <option value="TUNISIA">Tunisia</option>
+                <option value="TÜRKİYE">Türkiye</option>
+                <option value="TURKMENISTAN">Turkmenistan</option>
+                <option value="TURKS AND CAICOS ISLANDS (THE)">Turks And Caicos Islands</option>
+                <option value="TUVALU">Tuvalu</option>
+                <option value="UGANDA">Uganda</option>
+                <option value="UKRAINE">Ukraine</option>
+                <option value="UNITED ARAB EMIRATES (THE)">United Arab Emirates</option>
+                <option value="UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND (THE)">United Kingdom</option>
+                <option value="UNITED STATES OF AMERICA (THE)">United States</option>
+                <option value="UNITED STATES MINOR OUTLYING ISLANDS (THE)">United States Minor Outlying Islands</option>
+                <option value="URUGUAY">Uruguay</option>
+                <option value="UZBEKISTAN">Uzbekistan</option>
+                <option value="VANUATU">Vanuatu</option>
+                <option value="VENEZUELA (BOLIVARIAN REPUBLIC OF)">Venezuela (Bolivarian Republic Of)</option>
+                <option value="VIET NAM">Viet Nam</option>
+                <option value="VIRGIN ISLANDS (BRITISH)">Virgin Islands (British)</option>
+                <option value="VIRGIN ISLANDS (U.S.)">Virgin Islands (U.S.)</option>
+                <option value="WALLIS AND FUTUNA">Wallis And Futuna</option>
+                <option value="WESTERN SAHARA">Western Sahara</option>
+                <option value="YEMEN">Yemen</option>
+                <option value="ZAMBIA">Zambia</option>
+                <option value="ZIMBABWE">Zimbabwe</option>
+              </select></label>
+            <label><span>Seller currency</span><select name="sellerCurrency"><option value="">Select a country first</option></select></label>
+          </div>
+          <p class="helper-text" id="accountCurrencyHint">Your country sets the default currency for new invoices and quotes.</p>
+
+          <div class="form-grid">
+            <label>
+              <span>Full name (private)</span>
+              <input type="text" name="fullName" required />
+            </label>
+            <label>
+              <span>Username</span>
+              <input type="text" name="username" required />
+            </label>
+          </div>
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" required />
+          </label>
+          <div class="form-grid">
+            <label>
+              <span>Role</span>
+              <select name="role">
+                <option>Web designer</option>
+                <option>Web developer</option>
+                <option>Creative studio</option>
+                <option>Freelancer</option>
+              </select>
+            </label>
+            <label>
+              <span>Focus</span>
+              <select name="focus">
+                <option>Landing pages</option>
+                <option>E-commerce</option>
+                <option>Brand websites</option>
+                <option>Web apps</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            <span>Profile photo</span>
+            <input id="profilePictureInput" type="file" name="profilePicture" accept="image/*" />
+            <small class="helper-text">Use an image up to 2 MB.</small>
+          </label>
+          <h3 class="account-subheading">Social links</h3>
+          <div class="social-link-fields" id="profileSocialLinkFields"></div>
+          <button type="button" class="secondary-btn add-social-link-btn" id="addProfileSocialLink">+ Add a link</button>
+          <p class="helper-text">Paste a social profile URL to detect its service logo for your public profile.</p>
+          <p class="account-status" id="accountSaveStatus" aria-live="polite"></p>
+          <button type="submit" class="primary-btn full-width">Save personal details</button>
+        </form>
+        <div class="password-reset-section">
+          <h3>Reset password</h3>
+          <form id="passwordResetForm" class="store-form">
+            <label>
+              <span>Current password</span>
+              <input type="password" name="currentPassword" autocomplete="current-password" required />
+            </label>
+            <div class="form-grid">
+              <label>
+                <span>New password</span>
+                <input type="password" name="newPassword" autocomplete="new-password" required />
+              </label>
+              <label>
+                <span>Confirm new password</span>
+                <input type="password" name="confirmPassword" autocomplete="new-password" required />
+              </label>
+            </div>
+            <p class="account-status" id="passwordResetStatus" aria-live="polite"></p>
+            <button type="submit" class="secondary-btn full-width">Update password</button>
+          </form>
+          <p class="helper-text">Your password is managed securely by Firebase Authentication.</p>
+        </div>
+      </section>
+    </div>
+
+
+    <main id="notificationsPage" class="notifications-page hidden" aria-hidden="true">
+      <header class="topbar"><div><p class="template-eyebrow">Coriva</p><h1>Notifications &amp; jobs</h1></div><button type="button" class="secondary-btn" id="closeNotifications">Back to Coriva</button></header>
+      <p id="jobsStatus" class="account-status" aria-live="polite"></p>
+      <div class="jobs-layout">
+        <section class="glass-card jobs-section"><h2>Notifications</h2><p class="helper-text">Your latest 100 updates</p><div id="notificationList" class="jobs-list"></div></section>
+        <section class="glass-card jobs-section"><h2>Your requests</h2><p class="helper-text">Jobs you requested and requests for your storefronts.</p><div id="jobsList" class="jobs-list"></div></section>
+      </div>
+      <section id="jobDetail" class="glass-card jobs-section hidden">
+        <h2 id="jobTitle"></h2><p id="jobSummary" class="helper-text"></p><p id="jobDescription" class="job-description"></p>
+        <div id="jobActions" class="job-actions"></div>
+        <div id="jobConversation" class="hidden">
+          <h3>Private conversation</h3><p class="helper-text">Only you and the other job participant can read this conversation. Showing the latest 100 messages.</p>
+          <div id="jobMessages" class="job-thread" aria-live="polite"></div>
+          <form id="jobMessageForm" class="store-form"><label><span>Message</span><textarea name="message" maxlength="2000" required rows="3" placeholder="Discuss requirements, timing, and pricing"></textarea></label><button type="submit" class="primary-btn">Send message</button></form>
+          <h3>Quotes &amp; invoices</h3><div id="jobDocuments" class="jobs-list"></div>
+        </div>
+      </section>
+    </main>
+    <div id="estimateRequestModal" class="modal-overlay hidden" aria-hidden="true">
+      <section class="invoice-modal glass-card" role="dialog" aria-modal="true" aria-labelledby="estimateRequestTitle">
+        <button type="button" id="closeEstimateRequest" class="modal-close" aria-label="Close estimate request">×</button>
+        <h2 id="estimateRequestTitle">Request an estimate</h2>
+        <form id="estimateRequestForm" class="store-form">
+          <label><span>What would you like done?</span><textarea name="description" rows="6" minlength="20" maxlength="2000" required placeholder="Describe the job, what you need delivered, and any preferred timing or budget."></textarea></label>
+          <p class="helper-text">20–2,000 characters. The seller can accept or reject your request. If accepted, you can discuss the job privately.</p>
+          <p id="estimateRequestStatus" class="account-status" aria-live="polite"></p>
+          <button type="submit" class="primary-btn">Send estimate request</button>
+        </form>
+      </section>
+    </div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "coriva-workflows",
+      "ignore": [
+        "node_modules",
+        ".env*",
+        "test"
+      ]
+    }
+  ]
+}
