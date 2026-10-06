@@ -1,2 +1,5 @@
-node_modules/
-.env*
+{
+  "projects": {
+    "default": "aethel-30d56"
+  }
+}

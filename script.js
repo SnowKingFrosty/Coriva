@@ -1390,9 +1390,9 @@ const downloadSavedDocument = async (record, kind, button) => {
 };
 
 const downloadInvoicePdf = async (invoice, { storeOverride = null, statusTarget = invoiceStatus } = {}) => {
-  await loadExternalScript('./vendor/jspdf.umd.min.js', () => Boolean(window.jspdf?.jsPDF));
+  await loadExternalScript('./jspdf.umd.min.js', () => Boolean(window.jspdf?.jsPDF));
   if (invoice.status !== 'void' && invoice.paymentMethods?.length) {
-    await loadExternalScript('./vendor/qrcode.min.js', () => Boolean(window.QRCode));
+    await loadExternalScript('./qrcode.min.js', () => Boolean(window.QRCode));
   }
   const jsPDF = window.jspdf?.jsPDF;
   if (!jsPDF) throw new Error('PDF tools are unavailable.');
@@ -1585,7 +1585,7 @@ const saveQuote = async (quote) => {
   const refDoc=await addDoc(collection(db,'stores',store.id,'quotes'),{...data,createdAt:serverTimestamp()}); return {...quote,id:refDoc.id,storeId:store.id,ownerUid:user.uid};
 };
 const downloadQuotePdf = async (quote, { storeOverride = null, statusTarget = quoteStatus } = {}) => {
-  await loadExternalScript('./vendor/jspdf.umd.min.js',()=>Boolean(window.jspdf?.jsPDF));
+  await loadExternalScript('./jspdf.umd.min.js',()=>Boolean(window.jspdf?.jsPDF));
   const jsPDF=window.jspdf?.jsPDF; if(!jsPDF) throw new Error('PDF tools are unavailable.'); const store=storeOverride || stores.find((item)=>item.id===(quote.storeId||activeStorefrontId)); if(!store) throw new Error('Storefront not found.'); const {subtotal,tax,total,workflow}=quoteTotals(quote); const pdf=new jsPDF({unit:'pt',format:'letter'}); const margin=48,pageWidth=612; let y=52; const blue=[103,213,255],ink=[17,24,39],muted=[95,105,125];
   const addText=(text,x,yy,size=10,color=ink,options={})=>{pdf.setFontSize(size);pdf.setTextColor(...color);pdf.setFont('helvetica',options.bold?'bold':'normal');pdf.text(String(text??''),x,yy,options)};
   const addWrapped=(text,x,yy,width,size=10,color=ink)=>{pdf.setFontSize(size);pdf.setTextColor(...color);pdf.setFont('helvetica','normal');const lines=pdf.splitTextToSize(String(text||''),width);pdf.text(lines,x,yy);return yy+lines.length*(size+3)};

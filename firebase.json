@@ -7,12 +7,28 @@
   },
   "functions": [
     {
-      "source": "functions",
+      "source": ".",
       "codebase": "coriva-workflows",
       "ignore": [
         "node_modules",
+        ".git",
         ".env*",
-        "test"
+        "test",
+        "*.html",
+        "*.css",
+        "*.md",
+        "*.png",
+        "*.rules",
+        "CNAME",
+        "script.js",
+        "jobs.js",
+        "firebase.js",
+        "countries.js",
+        "currencies.js",
+        "exchange-rates.js",
+        "jspdf.umd.min.js",
+        "qrcode.min.js",
+        "firebase.json"
       ]
     }
   ]
